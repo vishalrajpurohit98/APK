@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Follow-up & Delivery Status</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#F97316;--on-primary:#fff;--primary-container:#FFEAD6;--on-primary-container:#7A3A06;
+  --surface:#FFFFFF;--surface-dim:#F4F6F9;--surface-2:#EEF2F6;
+  --on-surface:#1A1D21;--on-surface-variant:#5B636E;--outline:#DCE1E7;--outline-2:#C7CDD5;
+  --amber:#9A6400;--amber-c:#FBEBCF;--blue:#2F63C8;--blue-c:#E2EBFB;--green:#1E7A45;--green-c:#DEF1E6;--red:#C62B2B;--red-c:#FAE1E1;--slate:#5B636E;--slate-c:#EBEEF2;
+  --shadow-2:0 4px 14px rgba(16,24,40,.10),0 2px 6px rgba(16,24,40,.06);
+  --ring:rgba(249,115,22,.24);
+}
+@media (prefers-color-scheme:dark){:root{
+  --primary:#FF8A3D;--on-primary:#3A1C05;--primary-container:#5A3410;--on-primary-container:#FFD9BE;
+  --surface:#12161C;--surface-dim:#000000;--surface-2:#1B212A;
+  --on-surface:#E7EBF0;--on-surface-variant:#9BA4AF;--outline:#2A313B;--outline-2:#3A424D;
+  --amber:#F5B33F;--amber-c:#332710;--blue:#89ABF2;--blue-c:#182741;--green:#63CC8D;--green-c:#123122;--red:#F0787C;--red-c:#3A1618;--slate:#9BA4AF;--slate-c:#222933;
+  --shadow-2:0 8px 22px rgba(0,0,0,.6);--ring:rgba(255,138,61,.30);
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-dim);color:var(--on-surface);font-family:'Roboto',system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;padding:20px;display:flex;justify-content:center}
+.widget{width:100%;max-width:760px;background:var(--surface);border:1px solid var(--outline);border-radius:16px;box-shadow:var(--shadow-2);overflow:hidden}
+.appbar{display:flex;align-items:center;gap:13px;padding:18px 20px 15px;border-bottom:1px solid var(--outline)}
+.lead{width:42px;height:42px;border-radius:13px;background:var(--primary-container);color:var(--on-primary-container);display:flex;align-items:center;justify-content:center;flex:none}
+.lead svg{width:23px;height:23px}
+.titles{flex:1;min-width:0}
+.titles h1{margin:0;font-size:1.16rem;font-weight:600;letter-spacing:-.015em}
+.src{margin:3px 0 0;font-size:.72rem;color:var(--on-surface-variant);display:flex;align-items:center;gap:6px}
+.src i{width:7px;height:7px;border-radius:50%;background:var(--slate);display:inline-block}
+.src.live i{background:var(--green)}
+.segwrap{padding:16px 20px 6px}
+.segmented{display:flex;border:1px solid var(--outline-2);border-radius:999px;overflow:hidden;background:var(--surface)}
+.seg{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 8px;font:inherit;font-size:.82rem;font-weight:600;color:var(--on-surface-variant);background:transparent;border:0;border-right:1px solid var(--outline);cursor:pointer;transition:background .13s,color .13s;-webkit-tap-highlight-color:transparent}
+.seg:last-child{border-right:0}
+.seg:hover{background:var(--surface-dim)}
+.seg:focus-visible{outline:2px solid var(--primary);outline-offset:-2px}
+.seg.on{background:var(--primary-container);color:var(--on-primary-container)}
+.seg svg{width:18px;height:18px;flex:none}
+.seg .cnt{font-size:.7rem;font-weight:700;background:var(--surface-2);border:1px solid var(--outline);border-radius:999px;padding:1px 7px;min-width:20px;text-align:center}
+.seg.on .cnt{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+@media(max-width:560px){.seg{flex-direction:column;gap:4px;font-size:.68rem;padding:10px 4px}.seg .lbl{line-height:1.1;text-align:center}}
+.ctxt{padding:12px 20px 2px;font-size:.78rem;color:var(--on-surface-variant)}
+.list{padding:6px 12px 16px}
+.item{padding:14px;border-radius:12px;transition:background .12s;position:relative}
+.item:hover{background:var(--surface-dim)}
+.item:not(:last-child){box-shadow:inset 0 -1px 0 var(--outline)}
+.item.flag::before{content:'';position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:3px}
+.item.flag.red::before{background:var(--red)}
+.item.flag.amber::before{background:var(--amber)}
+.itop{display:flex;align-items:flex-start;gap:12px}
+.title{flex:1;font-size:.97rem;font-weight:600;line-height:1.36}
+.sub{margin:5px 0 0;font-size:.82rem;color:var(--on-surface-variant);line-height:1.4}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:7px 15px;margin-top:9px}
+.m{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--on-surface-variant);white-space:nowrap}
+.m svg{width:15px;height:15px;opacity:.85;flex:none}
+.m.red{color:var(--red);font-weight:600}
+.m.amber{color:var(--amber);font-weight:600}
+.badge{flex:none;display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;padding:4px 10px;border-radius:999px;border:1px solid}
+.badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.b-amber{color:var(--amber);border-color:var(--amber);background:var(--amber-c)}
+.b-blue{color:var(--blue);border-color:var(--blue);background:var(--blue-c)}
+.b-green{color:var(--green);border-color:var(--green);background:var(--green-c)}
+.b-slate{color:var(--slate);border-color:var(--slate);background:var(--slate-c)}
+.empty{padding:44px 20px;text-align:center;color:var(--on-surface-variant)}
+.empty svg{width:34px;height:34px;opacity:.4;margin-bottom:8px}
+.empty p{margin:0;font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="widget">
+  <div class="appbar">
+    <span class="lead"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg></span>
+    <div class="titles">
+      <h1>Follow-up &amp; Delivery Status</h1>
+      <p class="src" id="src"><i></i><span id="srcTxt">Sample data</span></p>
+    </div>
+  </div>
+  <div class="segwrap">
+    <div class="segmented" role="tablist">
+      <button class="seg on" data-k="upcoming" role="tab"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg><span class="lbl">Upcoming follow-ups</span><span class="cnt" id="c-upcoming">0</span></button>
+      <button class="seg" data-k="delayed" role="tab"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg><span class="lbl">Delayed</span><span class="cnt" id="c-delayed">0</span></button>
+      <button class="seg" data-k="tomorrow" role="tab"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9L21.46 12H17V9.5h2.5zM18 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg><span class="lbl">Tomorrow's deliveries</span><span class="cnt" id="c-tomorrow">0</span></button>
+    </div>
+  </div>
+  <p class="ctxt" id="ctxt"></p>
+  <div class="list" id="list"></div>
+</div>
+
+<script>
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const pad=n=>n<10?'0'+n:''+n;
+function todayISO(){const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function addDaysISO(iso,n){const p=iso.split('-');const d=new Date(+p[0],+p[1]-1,+p[2]+n);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function isoToDate(iso){const p=iso.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+function diffDays(a,b){return Math.round((isoToDate(a)-isoToDate(b))/86400000);}
+function fmtD(iso){const p=iso.split('-');return (+p[2])+' '+MON[+p[1]-1];}
+const SC={'In Progress':'amber','On Hold':'slate','Dependency':'blue','Completed':'green'};
+function endEta(a){return a.etaKind==='range'?(a.etaEnd||a.eta||''):(a.etaKind==='date'?(a.eta||''):'');}
+function isOpen(a){return a.status!=='Completed';}
+function buildSample(){
+  const t=todayISO();
+  const A=o=>Object.assign({ticket:'',etaKind:'date',eta:'',etaEnd:'',status:'In Progress',important:false,spocIds:[],rem:{on:false}},o);
+  return {
+    projects:[{id:'p_bcp',name:'BCP Bank',code:'BCP'},{id:'p_icici',name:'ICICI Bank',code:'ICICI'},{id:'p_scb',name:'SCB Bank',code:'SCB'}],
+    people:[{id:'u1',name:'Manan'},{id:'u2',name:'Poonam'},{id:'u3',name:'Loubna'},{id:'u4',name:'Ashish'},{id:'u5',name:'Vishal'},{id:'u6',name:'Jayanta'}],
+    actionables:[
+      A({id:'a1',projectId:'p_bcp',lineItem:'Limit changes sign-off',spocIds:['u1'],eta:addDaysISO(t,-3),status:'In Progress',important:true}),
+      A({id:'a2',projectId:'p_bcp',lineItem:'Domiciliation FSD sign-off',spocIds:['u3'],eta:addDaysISO(t,-10),status:'Dependency',important:true}),
+      A({id:'a3',projectId:'p_bcp',lineItem:'Compliance module UAT',spocIds:['u1'],eta:addDaysISO(t,0),status:'In Progress',rem:{on:true,done:false,date:todayISO(),note:'Confirm UAT slot with bank'}}),
+      A({id:'a4',projectId:'p_bcp',lineItem:'Machine access for IRE deploy',spocIds:['u6'],eta:addDaysISO(t,1),status:'On Hold'}),
+      A({id:'a5',projectId:'p_icici',lineItem:'Cross-border remittance API',spocIds:['u5'],eta:addDaysISO(t,4),status:'In Progress',important:true,rem:{on:true,done:false,date:addDaysISO(t,2),note:'Chase API creds from vendor'}}),
+      A({id:'a6',projectId:'p_icici',lineItem:'Settlement mismatch escalation',spocIds:['u4'],eta:addDaysISO(t,-1),status:'In Progress'}),
+      A({id:'a8',projectId:'p_icici',lineItem:'Go-live checklist sign-off',spocIds:['u5'],eta:addDaysISO(t,6),status:'On Hold',rem:{on:true,done:false,date:addDaysISO(t,5),note:'Collect final sign-offs'}}),
+      A({id:'a9',projectId:'p_scb',lineItem:'SIT environment setup',spocIds:['u6'],eta:addDaysISO(t,1),status:'In Progress'}),
+      A({id:'a10',projectId:'p_scb',lineItem:'Data migration dry run',spocIds:['u4'],eta:addDaysISO(t,-2),status:'In Progress',important:true}),
+      A({id:'a12',projectId:'p_bcp',lineItem:'Weekly status deck for SteerCo',spocIds:['u1'],eta:addDaysISO(t,3),status:'In Progress',rem:{on:true,done:false,date:addDaysISO(t,1),note:'Send deck to SteerCo'}})
+    ]
+  };
+}
+function loadData(){
+  try{const raw=localStorage.getItem('act_data');if(raw){const s=JSON.parse(raw);if(s&&Array.isArray(s.actionables)&&s.actionables.length)return {data:s,live:true};}}catch(e){}
+  return {data:buildSample(),live:false};
+}
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ICON={person:'<path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>',event:'<path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM7 12h5v5H7z"/>',clock:'<path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>',bell:'<path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5S10.5 3.17 10.5 4v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>',done:'<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>'};
+function svg(n){return '<svg viewBox="0 0 24 24" fill="currentColor">'+ICON[n]+'</svg>';}
+
+let DATA,LIVE,uMap;
+function personName(id){return uMap[id]||'—';}
+function ownerOf(a){return (a.spocIds&&a.spocIds.length)?a.spocIds.map(personName).join(' & '):'To be assigned';}
+function initData(){const r=loadData();DATA=r.data;LIVE=r.live;uMap={};(DATA.people||[]).forEach(u=>uMap[u.id]=u.name);}
+
+function sets(){
+  const t=todayISO(), tmr=addDaysISO(t,1);
+  const acts=(DATA.actionables||[]).filter(a=>a.projectId!=='__personal');
+  const upcoming=acts.filter(a=>isOpen(a)&&a.rem&&a.rem.on&&!a.rem.done&&a.rem.date&&a.rem.date>=t)
+    .sort((a,b)=>a.rem.date<b.rem.date?-1:1);
+  const delayed=acts.filter(a=>{if(!isOpen(a))return false;const e=endEta(a);return e&&e<t;})
+    .sort((a,b)=>diffDays(endEta(a),t)-diffDays(endEta(b),t));
+  const tomorrow=acts.filter(a=>isOpen(a)&&endEta(a)===tmr);
+  return {upcoming,delayed,tomorrow};
+}
+const CTXT={upcoming:'Follow-up reminders coming up, soonest first.',delayed:'Open items past their due date — most overdue first.',tomorrow:'Items due tomorrow.'};
+
+let current='upcoming';
+function itemHTML(a,mode){
+  const owner=ownerOf(a), st=SC[a.status]||'slate', t=todayISO();
+  let flag='', metaExtra='';
+  if(mode==='upcoming'){
+    const k=diffDays(a.rem.date,t);
+    const when=k===0?'Today':k===1?'Tomorrow':'In '+k+' days';
+    metaExtra='<span class="m amber">'+svg('bell')+esc(fmtD(a.rem.date))+' · '+when+'</span>';
+    flag=' flag amber';
+  }else if(mode==='delayed'){
+    const late=-diffDays(endEta(a),t);
+    metaExtra='<span class="m red">'+svg('event')+esc(fmtD(endEta(a)))+' · '+late+' day'+(late===1?'':'s')+' late</span>';
+    flag=' flag red';
+  }else{
+    metaExtra='<span class="m amber">'+svg('event')+esc(fmtD(endEta(a)))+' · Due tomorrow</span>';
+    flag=' flag amber';
+  }
+  const note=(mode==='upcoming'&&a.rem&&a.rem.note)?'<p class="sub">'+esc(a.rem.note)+'</p>':'';
+  return '<div class="item'+flag+'">'+
+    '<div class="itop"><span class="title">'+esc(a.lineItem)+'</span><span class="badge b-'+st+'">'+esc(a.status)+'</span></div>'+
+    note+
+    '<div class="meta"><span class="m">'+svg('person')+esc(owner)+'</span>'+metaExtra+'</div>'+
+  '</div>';
+}
+function render(){
+  const S=sets();
+  document.getElementById('c-upcoming').textContent=S.upcoming.length;
+  document.getElementById('c-delayed').textContent=S.delayed.length;
+  document.getElementById('c-tomorrow').textContent=S.tomorrow.length;
+  document.getElementById('ctxt').textContent=CTXT[current];
+  const items=S[current], list=document.getElementById('list');
+  if(!items.length){
+    const msg={upcoming:'No upcoming follow-ups.',delayed:'Nothing delayed — everything is on track.',tomorrow:'No deliveries due tomorrow.'}[current];
+    list.innerHTML='<div class="empty">'+svg('done')+'<p>'+msg+'</p></div>';return;
+  }
+  list.innerHTML=items.map(a=>itemHTML(a,current)).join('');
+}
+function boot(){
+  initData();
+  const s=document.getElementById('src');
+  if(LIVE){s.classList.add('live');document.getElementById('srcTxt').textContent='Live data';}
+  else document.getElementById('srcTxt').textContent='Sample data';
+  document.querySelectorAll('.seg').forEach(btn=>btn.addEventListener('click',()=>{
+    document.querySelectorAll('.seg').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');current=btn.getAttribute('data-k');render();
+  }));
+  render();
+}
+boot();
+</script>
+</body>
+</html>
