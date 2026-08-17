@@ -1,0 +1,14 @@
+{
+  "name": "actionables",
+  "version": "7.5.11",
+  "description": "Actionables task management app",
+  "scripts": {
+    "sync": "cap sync android",
+    "open": "cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.1",
+    "@capacitor/cli": "^6.2.1",
+    "@capacitor/core": "^6.2.1"
+  }
+}

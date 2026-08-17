@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Actionables</title>
+<link rel="stylesheet" href="styles.css?v=7.5.11">
+</head>
+<body class="auth-locked">
+<div id="app"></div>
+<div id="sheets"></div>
+<div id="toastwrap"></div>
+<script src="vendor/xlsx.full.min.js"></script>
+<script src="vendor/jspdf.umd.min.js"></script>
+<script src="vendor/jspdf.autotable.min.js"></script>
+<script src="firebase-config.js"></script>
+<script src="sync.js?v=7.5.10"></script>
+<script src="seed.js?v=7.5.10"></script>
+<script src="app.js?v=7.5.11"></script>
+
+<div id="reading-mode-control" class="reading-mode-control" aria-label="Reading mode">
+  <label for="readingModeSelect">Reading mode</label>
+  <select id="readingModeSelect">
+    <option value="default">Default</option>
+    <option value="warm">Warm Paper</option>
+    <option value="sepia">Soft Sepia</option>
+    <option value="sage">Soft Sage</option>
+    <option value="slate">Soft Slate</option>
+  </select>
+</div>
+
+</body>
+</html>
