@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Actionables</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#F97316;--on-primary:#fff;--primary-container:#FFEAD6;--on-primary-container:#7A3A06;
+  --surface:#FFFFFF;--surface-dim:#F4F6F9;--surface-2:#EEF2F6;
+  --on-surface:#1A1D21;--on-surface-variant:#5B636E;--outline:#DCE1E7;--outline-2:#C7CDD5;
+  --amber:#9A6400;--amber-c:#FBEBCF;--blue:#2F63C8;--blue-c:#E2EBFB;--green:#1E7A45;--green-c:#DEF1E6;--red:#C62B2B;--red-c:#FAE1E1;--slate:#5B636E;--slate-c:#EBEEF2;
+  --shadow-2:0 4px 14px rgba(16,24,40,.10),0 2px 6px rgba(16,24,40,.06);
+  --ring:rgba(249,115,22,.24);
+}
+@media (prefers-color-scheme:dark){:root{
+  --primary:#FF8A3D;--on-primary:#3A1C05;--primary-container:#5A3410;--on-primary-container:#FFD9BE;
+  --surface:#12161C;--surface-dim:#000000;--surface-2:#1B212A;
+  --on-surface:#E7EBF0;--on-surface-variant:#9BA4AF;--outline:#2A313B;--outline-2:#3A424D;
+  --amber:#F5B33F;--amber-c:#332710;--blue:#89ABF2;--blue-c:#182741;--green:#63CC8D;--green-c:#123122;--red:#F0787C;--red-c:#3A1618;--slate:#9BA4AF;--slate-c:#222933;
+  --shadow-2:0 8px 22px rgba(0,0,0,.6);--ring:rgba(255,138,61,.30);
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-dim);color:var(--on-surface);font-family:'Roboto',system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;padding:20px;display:flex;justify-content:center}
+.widget{width:100%;max-width:760px;background:var(--surface);border:1px solid var(--outline);border-radius:16px;box-shadow:var(--shadow-2);overflow:hidden}
+.appbar{display:flex;align-items:center;gap:13px;padding:18px 20px 15px;border-bottom:1px solid var(--outline)}
+.lead{width:42px;height:42px;border-radius:13px;background:var(--primary-container);color:var(--on-primary-container);display:flex;align-items:center;justify-content:center;flex:none}
+.lead svg{width:23px;height:23px}
+.titles{flex:1;min-width:0}
+.titles h1{margin:0;font-size:1.16rem;font-weight:600;letter-spacing:-.015em}
+.src{margin:3px 0 0;font-size:.72rem;color:var(--on-surface-variant);display:flex;align-items:center;gap:6px}
+.src i{width:7px;height:7px;border-radius:50%;background:var(--slate);display:inline-block}
+.src.live i{background:var(--green)}
+.count{flex:none;font-size:.72rem;font-weight:600;color:var(--on-surface-variant);background:var(--surface-2);border:1px solid var(--outline);padding:6px 11px;border-radius:999px}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:13px;padding:16px 20px 8px}
+@media(max-width:560px){.filters{grid-template-columns:1fr}}
+.flabel{display:block;font-size:.68rem;font-weight:600;color:var(--on-surface-variant);margin:0 0 6px 2px;letter-spacing:.03em;text-transform:uppercase}
+.select{position:relative}
+.select select{appearance:none;-webkit-appearance:none;width:100%;background:var(--surface);border:1px solid var(--outline-2);border-radius:12px;padding:13px 40px 13px 14px;font:inherit;font-size:.92rem;font-weight:500;color:var(--on-surface);cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.select select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--ring)}
+.select .chev{position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--on-surface-variant);width:20px;height:20px}
+.list{padding:8px 12px 16px}
+.item{padding:14px;border-radius:12px;transition:background .12s;position:relative}
+.item:hover{background:var(--surface-dim)}
+.item:not(:last-child){box-shadow:inset 0 -1px 0 var(--outline)}
+.item.hi::before{content:'';position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:3px;background:var(--red)}
+.itop{display:flex;align-items:flex-start;gap:12px}
+.title{flex:1;font-size:.97rem;font-weight:600;line-height:1.36}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:7px 15px;margin-top:9px}
+.m{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--on-surface-variant);white-space:nowrap}
+.m svg{width:15px;height:15px;opacity:.85;flex:none}
+.due.over,.due.severe{color:var(--red);font-weight:600}
+.due.today,.due.tmr{color:var(--amber);font-weight:600}
+.due.done{color:var(--green);font-weight:500}
+.m.pri.hi{color:var(--red);font-weight:600}
+.badge{flex:none;display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;padding:4px 10px;border-radius:999px;border:1px solid;letter-spacing:.01em}
+.badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.b-amber{color:var(--amber);border-color:var(--amber);background:var(--amber-c)}
+.b-blue{color:var(--blue);border-color:var(--blue);background:var(--blue-c)}
+.b-green{color:var(--green);border-color:var(--green);background:var(--green-c)}
+.b-slate{color:var(--slate);border-color:var(--slate);background:var(--slate-c)}
+.empty{padding:44px 20px;text-align:center;color:var(--on-surface-variant)}
+.empty svg{width:34px;height:34px;opacity:.4;margin-bottom:8px}
+.empty p{margin:0;font-size:.9rem}
+
+.addbtn{flex:none;display:inline-flex;align-items:center;gap:5px;background:var(--primary);color:var(--on-primary);border:0;border-radius:999px;padding:8px 14px 8px 11px;font:inherit;font-size:.82rem;font-weight:600;cursor:pointer;box-shadow:0 2px 6px rgba(249,115,22,.35);transition:filter .12s}
+.addbtn:hover{filter:brightness(1.06)}.addbtn:active{filter:brightness(.95)}
+.addbtn svg{width:17px;height:17px}
+.scrim{position:fixed;inset:0;background:rgba(10,14,20,.5);display:none;align-items:flex-end;justify-content:center;z-index:50}
+.scrim.on{display:flex}
+@media(min-width:600px){.scrim{align-items:center;padding:20px}}
+.mcard{width:100%;max-width:460px;background:var(--surface);border:1px solid var(--outline);border-radius:20px 20px 0 0;box-shadow:0 -10px 34px rgba(0,0,0,.3);padding:18px 18px 16px;max-height:92vh;overflow-y:auto}
+@media(min-width:600px){.mcard{border-radius:20px}}
+.mcard h2{margin:0 0 15px;font-size:1.06rem;font-weight:600}
+.mfield{margin-bottom:13px}
+.mfield>label{display:block;font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.03em;color:var(--on-surface-variant);margin:0 0 6px 2px}
+.mfield input[type=text],.mfield input[type=date],.mfield select{width:100%;background:var(--surface);border:1px solid var(--outline-2);border-radius:12px;padding:12px 13px;font:inherit;font-size:.92rem;color:var(--on-surface);-webkit-appearance:none;appearance:none}
+.mfield input:focus,.mfield select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--ring)}
+.mrow{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.mtoggle{display:flex;align-items:center;gap:10px}
+.mtoggle input{width:18px;height:18px;accent-color:var(--primary)}
+.mtoggle label{margin:0;font-size:.92rem;color:var(--on-surface)}
+.mactions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.mbtn{border:0;border-radius:999px;padding:11px 18px;font:inherit;font-size:.88rem;font-weight:600;cursor:pointer}
+.mbtn.text{background:transparent;color:var(--on-surface-variant)}
+.mbtn.text:hover{background:var(--surface-dim)}
+.mbtn.filled{background:var(--primary);color:var(--on-primary)}
+.mbtn.filled:disabled{opacity:.45;cursor:default}
+</style>
+</head>
+<body>
+<div class="widget">
+  <div class="appbar">
+    <span class="lead"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg></span>
+    <div class="titles">
+      <h1>Project Actionables</h1>
+      <p class="src" id="src"><i></i><span id="srcTxt">Sample data</span></p>
+    </div>
+    <button class="addbtn" id="addBtn" title="Add action item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>Add</button><span class="count" id="count">0 items</span>
+  </div>
+  <div class="filters">
+    <div class="field">
+      <span class="flabel">Project</span>
+      <div class="select"><select id="proj"></select><svg class="chev" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></div>
+    </div>
+    <div class="field">
+      <span class="flabel">SPOC / Owner</span>
+      <div class="select"><select id="spoc"></select><svg class="chev" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></div>
+    </div>
+  </div>
+  <div class="list" id="list"></div>
+</div>
+
+<script>
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const pad=n=>n<10?'0'+n:''+n;
+function todayISO(){const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function addDaysISO(iso,n){const p=iso.split('-');const d=new Date(+p[0],+p[1]-1,+p[2]+n);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function isoToDate(iso){const p=iso.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+function diffDays(a,b){return Math.round((isoToDate(a)-isoToDate(b))/86400000);}
+function fmtD(iso){const p=iso.split('-');return (+p[2])+' '+MON[+p[1]-1];}
+const SC={'In Progress':'amber','On Hold':'slate','Dependency':'blue','Completed':'green'};
+function endEta(a){return a.etaKind==='range'?(a.etaEnd||a.eta||''):(a.etaKind==='date'?(a.eta||''):'');}
+function isOpen(a){return a.status!=='Completed';}
+function dueInfo(a){
+  const t=todayISO();
+  if(a.status==='Completed'){const e=endEta(a)||a.eta;return {label:(e?fmtD(e)+' · ':'')+'Completed',cls:'done'};}
+  const e=endEta(a);
+  if(!e)return {label:'No due date',cls:'none'};
+  const k=diffDays(e,t);
+  if(k<0)return {label:fmtD(e)+' · '+(-k)+' day'+(-k===1?'':'s')+' late',cls:(-k>=8?'severe':'over')};
+  if(k===0)return {label:fmtD(e)+' · Due today',cls:'today'};
+  if(k===1)return {label:fmtD(e)+' · Due tomorrow',cls:'tmr'};
+  return {label:fmtD(e)+' · In '+k+' days',cls:'future'};
+}
+function buildSample(){
+  const t=todayISO();
+  const A=o=>Object.assign({ticket:'',etaKind:'date',eta:'',etaEnd:'',status:'In Progress',important:false,spocIds:[]},o);
+  return {
+    projects:[{id:'p_bcp',name:'BCP Bank',code:'BCP'},{id:'p_icici',name:'ICICI Bank',code:'ICICI'},{id:'p_scb',name:'SCB Bank',code:'SCB'}],
+    people:[{id:'u1',name:'Manan'},{id:'u2',name:'Poonam'},{id:'u3',name:'Loubna'},{id:'u4',name:'Ashish'},{id:'u5',name:'Vishal'},{id:'u6',name:'Jayanta'}],
+    actionables:[
+      A({id:'a1',projectId:'p_bcp',lineItem:'Limit changes sign-off',spocIds:['u1'],eta:addDaysISO(t,-3),status:'In Progress',important:true}),
+      A({id:'a2',projectId:'p_bcp',lineItem:'Domiciliation FSD sign-off',spocIds:['u3'],eta:addDaysISO(t,-10),status:'Dependency',important:true}),
+      A({id:'a3',projectId:'p_bcp',lineItem:'Compliance module UAT',spocIds:['u1'],eta:addDaysISO(t,0),status:'In Progress'}),
+      A({id:'a4',projectId:'p_bcp',lineItem:'Machine access for IRE deploy',spocIds:['u6'],eta:addDaysISO(t,1),status:'On Hold'}),
+      A({id:'a5',projectId:'p_icici',lineItem:'Cross-border remittance API',spocIds:['u5'],eta:addDaysISO(t,2),status:'In Progress',important:true}),
+      A({id:'a6',projectId:'p_icici',lineItem:'Settlement mismatch escalation',spocIds:['u4'],eta:addDaysISO(t,-1),status:'In Progress'}),
+      A({id:'a7',projectId:'p_icici',lineItem:'Sanction screening ruleset',spocIds:['u2'],etaKind:'none',status:'Dependency'}),
+      A({id:'a8',projectId:'p_icici',lineItem:'Go-live checklist sign-off',spocIds:['u5'],eta:addDaysISO(t,6),status:'On Hold'}),
+      A({id:'a9',projectId:'p_scb',lineItem:'SIT environment setup',spocIds:['u6'],eta:addDaysISO(t,1),status:'In Progress'}),
+      A({id:'a10',projectId:'p_scb',lineItem:'Data migration dry run',spocIds:['u4'],eta:addDaysISO(t,-2),status:'In Progress',important:true}),
+      A({id:'a11',projectId:'p_scb',lineItem:'Onboarding handover pack',spocIds:['u2'],eta:addDaysISO(t,-15),status:'Completed'}),
+      A({id:'a12',projectId:'p_bcp',lineItem:'Weekly status deck for SteerCo',spocIds:['u1'],eta:addDaysISO(t,3),status:'In Progress'})
+    ]
+  };
+}
+function loadData(){
+  try{const raw=localStorage.getItem('act_data');if(raw){const s=JSON.parse(raw);if(s&&Array.isArray(s.actionables)&&s.actionables.length)return {data:s,live:true};}}catch(e){}
+  return {data:buildSample(),live:false};
+}
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ICON={person:'<path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>',event:'<path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM7 12h5v5H7z"/>',flag:'<path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/>',inbox:'<path d="M19 3H4.99C3.89 3 3 3.9 3 5l.01 14c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 12h-4c0 1.66-1.35 3-3 3s-3-1.34-3-3H4.99V5H19v10z"/>'};
+function svg(n,cls){return '<svg viewBox="0 0 24 24" fill="currentColor"'+(cls?' class="'+cls+'"':'')+'>'+ICON[n]+'</svg>';}
+
+let DATA,LIVE,pMap,uMap;
+function personName(id){return uMap[id]||'—';}
+function initData(){const r=loadData();DATA=r.data;LIVE=r.live;pMap={};uMap={};(DATA.projects||[]).forEach(p=>pMap[p.id]=p);(DATA.people||[]).forEach(u=>uMap[u.id]=u.name);}
+
+function fillProjects(){
+  const sel=document.getElementById('proj');
+  const projs=(DATA.projects||[]).filter(p=>p.id!=='__personal');
+  sel.innerHTML='<option value="__all">All projects</option>'+projs.map(p=>'<option value="'+p.id+'">'+esc(p.name)+'</option>').join('');
+}
+function spocsFor(projId){
+  const seen={},out=[];
+  (DATA.actionables||[]).forEach(a=>{
+    if(a.projectId==='__personal')return;
+    if(projId!=='__all'&&a.projectId!==projId)return;
+    (a.spocIds||[]).forEach(id=>{if(!seen[id]){seen[id]=1;out.push(id);}});
+  });
+  out.sort((x,y)=>personName(x).toLowerCase()<personName(y).toLowerCase()?-1:1);
+  return out;
+}
+function fillSpocs(){
+  const sel=document.getElementById('spoc');const proj=document.getElementById('proj').value;
+  const ids=spocsFor(proj);
+  sel.innerHTML='<option value="__all">All SPOCs</option>'+ids.map(id=>'<option value="'+id+'">'+esc(personName(id))+'</option>').join('')+'<option value="__none">Unassigned</option>';
+}
+function render(){
+  const proj=document.getElementById('proj').value, spoc=document.getElementById('spoc').value;
+  let items=(DATA.actionables||[]).filter(a=>a.projectId!=='__personal');
+  if(proj!=='__all')items=items.filter(a=>a.projectId===proj);
+  if(spoc==='__none')items=items.filter(a=>!a.spocIds||!a.spocIds.length);
+  else if(spoc!=='__all')items=items.filter(a=>(a.spocIds||[]).indexOf(spoc)>=0);
+  // open first, then overdue-first, then due date
+  const t=todayISO();
+  items.sort((a,b)=>{
+    const oa=isOpen(a)?0:1, ob=isOpen(b)?0:1; if(oa!==ob)return oa-ob;
+    const ea=endEta(a), eb=endEta(b);
+    const ka=ea?diffDays(ea,t):9999, kb=eb?diffDays(eb,t):9999; return ka-kb;
+  });
+  document.getElementById('count').textContent=items.length+(items.length===1?' item':' items');
+  const list=document.getElementById('list');
+  if(!items.length){list.innerHTML='<div class="empty">'+svg('inbox')+'<p>No action items for this selection.</p></div>';return;}
+  list.innerHTML=items.map(a=>{
+    const d=dueInfo(a), owner=(a.spocIds&&a.spocIds.length)?a.spocIds.map(personName).join(' & '):'To be assigned';
+    const st=SC[a.status]||'slate';
+    const pri=a.important?'<span class="m pri hi">'+svg('flag')+'High</span>':'<span class="m pri">'+svg('flag')+'Normal</span>';
+    return '<div class="item'+(a.important&&isOpen(a)?' hi':'')+'">'+
+      '<div class="itop"><span class="title">'+esc(a.lineItem)+'</span>'+
+        '<span class="badge b-'+st+'">'+esc(a.status)+'</span></div>'+
+      '<div class="meta">'+
+        '<span class="m">'+svg('person')+esc(owner)+'</span>'+
+        '<span class="m due '+d.cls+'">'+svg('event')+esc(d.label)+'</span>'+
+        pri+
+      '</div></div>';
+  }).join('');
+}
+function uid(){return 'a'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function fillMSpoc(){
+  const sel=document.getElementById('mSpoc');
+  sel.innerHTML='<option value="">To be assigned</option>'+(DATA.people||[]).slice().sort((a,b)=>a.name.toLowerCase()<b.name.toLowerCase()?-1:1).map(u=>'<option value="'+u.id+'">'+esc(u.name)+'</option>').join('');
+  const sp=document.getElementById('spoc').value; if(sp&&sp!=='__all'&&sp!=='__none')sel.value=sp;
+}
+function openAdd(){
+  const proj=document.getElementById('proj').value;
+  const mp=document.getElementById('mProj'), projs=(DATA.projects||[]).filter(p=>p.id!=='__personal');
+  mp.innerHTML=projs.map(p=>'<option value="'+p.id+'">'+esc(p.name)+'</option>').join('');
+  if(proj!=='__all')mp.value=proj;
+  fillMSpoc();
+  document.getElementById('mTitle').value='';document.getElementById('mDue').value='';
+  document.getElementById('mPri').checked=false;document.getElementById('mStatus').value='In Progress';
+  document.getElementById('mSave').disabled=true;
+  document.getElementById('scrim').classList.add('on');
+  setTimeout(()=>document.getElementById('mTitle').focus(),40);
+}
+function closeAdd(){document.getElementById('scrim').classList.remove('on');}
+function saveAdd(){
+  const title=document.getElementById('mTitle').value.trim(); if(!title)return;
+  const pid=document.getElementById('mProj').value, sid=document.getElementById('mSpoc').value, due=document.getElementById('mDue').value, now=Date.now();
+  const a={id:uid(),projectId:pid,ticket:'',ticketUrl:'',lineItem:title,task:'',spocIds:sid?[sid]:[],etaKind:due?'date':'none',eta:due||'',etaEnd:'',status:document.getElementById('mStatus').value,important:document.getElementById('mPri').checked,tags:[],rem:{on:false,date:'',time:'',note:'',done:false},notes:'',comments:[],activity:[],createdAt:now,updatedAt:now,completedAt:null};
+  DATA.actionables.unshift(a);
+  if(LIVE){try{const raw=localStorage.getItem('act_data');const st=raw?JSON.parse(raw):null;if(st&&Array.isArray(st.actionables)){st.actionables.unshift(a);localStorage.setItem('act_data',JSON.stringify(st));}}catch(e){}}
+  closeAdd();
+  document.getElementById('proj').value=pid; fillSpocs(); render();
+}
+function boot(){
+  initData();
+  const s=document.getElementById('src');
+  if(LIVE){s.classList.add('live');document.getElementById('srcTxt').textContent='Live data';}
+  else document.getElementById('srcTxt').textContent='Sample data';
+  fillProjects();fillSpocs();render();
+  document.getElementById('proj').addEventListener('change',()=>{fillSpocs();render();});
+  document.getElementById('spoc').addEventListener('change',render);
+  document.getElementById('addBtn').addEventListener('click',openAdd);
+  document.getElementById('mCancel').addEventListener('click',closeAdd);
+  document.getElementById('mSave').addEventListener('click',saveAdd);
+  document.getElementById('scrim').addEventListener('click',e=>{if(e.target.id==='scrim')closeAdd();});
+  const mt=document.getElementById('mTitle');
+  mt.addEventListener('input',()=>{document.getElementById('mSave').disabled=!mt.value.trim();});
+  mt.addEventListener('keydown',e=>{if(e.key==='Enter'&&mt.value.trim())saveAdd();});
+}
+boot();
+</script>
+<div class="scrim" id="scrim">
+  <div class="mcard" role="dialog" aria-modal="true" aria-label="Add action item">
+    <h2>Add action item</h2>
+    <div class="mfield"><label for="mTitle">Action item</label><input type="text" id="mTitle" placeholder="e.g. Confirm downtime window"></div>
+    <div class="mrow">
+      <div class="mfield"><label for="mProj">Project</label><select id="mProj"></select></div>
+      <div class="mfield"><label for="mSpoc">Owner / SPOC</label><select id="mSpoc"></select></div>
+    </div>
+    <div class="mrow">
+      <div class="mfield"><label for="mDue">Due date</label><input type="date" id="mDue"></div>
+      <div class="mfield"><label for="mStatus">Status</label><select id="mStatus"><option>In Progress</option><option>On Hold</option><option>Dependency</option></select></div>
+    </div>
+    <div class="mfield mtoggle"><input type="checkbox" id="mPri"><label for="mPri">High priority</label></div>
+    <div class="mactions"><button class="mbtn text" id="mCancel">Cancel</button><button class="mbtn filled" id="mSave" disabled>Add item</button></div>
+  </div>
+</div>
+</body>
+</html>
